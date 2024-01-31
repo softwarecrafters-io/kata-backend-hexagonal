@@ -21,7 +21,9 @@ describe('The User Registration Service', () => {
         await userRegistrationService.register(registrationRequest);
 
         const storedUser = await userRepository.findByEmail(Email.create(registrationRequest.email));
-        expect(storedUser.isMatchingEmail(Email.create(registrationRequest.email))).toBe(true);
+        storedUser.fold(
+            () => fail('User not found'),
+            (user) => expect(user.isMatchingEmail(Email.create(registrationRequest.email))).toBe(true))
     });
 
     it('does not allow to register an user when an user with the same email already exists', async () => {

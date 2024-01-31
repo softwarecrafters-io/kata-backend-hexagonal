@@ -3,6 +3,7 @@ import {Email} from "../../../../core/valueObjects/email";
 import {Id} from "../../../../core/valueObjects/id";
 import {Password} from "../../../../core/valueObjects/password";
 import {InMemoryUserRepository, UserRepository} from "../../../../core/repositories/userRepository";
+import {Maybe} from "../../../../core/common/maybe";
 
 describe('The In Memory User Repository', ()=>{
     let repo: InMemoryUserRepository;
@@ -18,7 +19,9 @@ describe('The In Memory User Repository', ()=>{
 
         const foundUser = await repo.findById(id);
 
-        expect(foundUser).toEqual(user);
+        foundUser.fold(
+            ()=> fail('User not found'),
+         (u: User)=> expect(u).toEqual(user))
     });
 
     it('does not find a non-existing user by ID', async ()=>{
@@ -26,7 +29,7 @@ describe('The In Memory User Repository', ()=>{
 
         const foundUser = await repo.findById(id);
 
-        expect(foundUser).toBeUndefined();
+        expect(foundUser).toEqual(Maybe.nothing());
     });
 
     it('finds a user by Email', async ()=>{
@@ -36,7 +39,9 @@ describe('The In Memory User Repository', ()=>{
 
         const foundUser = await repo.findByEmail(email);
 
-        expect(foundUser).toEqual(user);
+        foundUser.fold(
+            ()=> fail('User not found'),
+            (u: User)=> expect(u).toEqual(user))
     });
 
     it('does not find a non-existing user by Email', async ()=>{
@@ -44,7 +49,7 @@ describe('The In Memory User Repository', ()=>{
 
         const foundUser = await repo.findByEmail(email);
 
-        expect(foundUser).toBeUndefined();
+        expect(foundUser).toEqual(Maybe.nothing());
     });
 
     it('finds all users', async ()=>{
@@ -74,7 +79,7 @@ describe('The In Memory User Repository', ()=>{
         await repo.remove(user);
         const foundUser = await repo.findByEmail(email);
 
-        expect(foundUser).toBeUndefined();
+        expect(foundUser).toEqual(Maybe.nothing());
     });
 
     it('updates an user when its already exists', async ()=>{

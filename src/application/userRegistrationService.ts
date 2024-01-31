@@ -11,10 +11,10 @@ export class UserRegistrationService {
 
     async register(registrationRequest: UserRegistrationRequest): Promise<UserRegistrationResponse> {
         const { email, password } = registrationRequest;
-        const existingUser = await this.userRepository.findByEmail(Email.create(email));
-        if (existingUser) {
-            throw new ValidationError('User already exists with this email.');
-        }
+        const maybeExistingUser = await this.userRepository.findByEmail(Email.create(email));
+        maybeExistingUser.tap(()=> {
+            throw new ValidationError('User already exists with this email.')
+        });
         const user = this.createUser(email, password);
         await this.userRepository.save(user);
         return user.toDto();
