@@ -9,6 +9,10 @@ export class User {
         private password: Password
     ) {}
 
+    static fromDto(dto: { id:string, email:string, password:string }):User{
+        return new User(Id.createFrom(dto.id), Email.create(dto.email), Password.createFromHash(dto.password));
+    }
+
     changePassword(newPassword: Password): void {
         if (this.isMatchingPassword(newPassword)) {
             throw new Error('New password must be different');
@@ -35,7 +39,8 @@ export class User {
     toDto() {
         return {
             id: this.id.toString(),
-            email: this.email.toString()
+            email: this.email.toString(),
+            password: this.password.toString()
         };
     }
 }

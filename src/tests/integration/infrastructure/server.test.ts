@@ -1,6 +1,6 @@
 import request from "supertest";
-import {Routes} from "../../infrastructure/routes";
-import {Factory} from "../../infrastructure/factory";
+import {Routes} from "../../../infrastructure/routes";
+import {Factory} from "../../../infrastructure/factory";
 import {Express} from "express";
 
 describe('The Server', ()=>{

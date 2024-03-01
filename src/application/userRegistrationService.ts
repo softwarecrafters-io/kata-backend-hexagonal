@@ -15,16 +15,21 @@ export class UserRegistrationService {
         maybeExistingUser.tap(()=> {
             throw new ValidationError('User already exists with this email.')
         });
-        const user = this.createUser(email, password);
+        const id = Id.generateUniqueId();
+        const user = this.createUser(id, email, password);
         await this.userRepository.save(user);
-        return user.toDto();
+        return {
+            id: id.toString(),
+            email
+        };
     }
 
-    private createUser(email: string, password: string) {
-        return new User(
-            Id.generateUniqueId(),
+    private createUser(id: Id, email: string, password: string) {
+        const user = new User(
+            id,
             Email.create(email),
             Password.createFromPlainText(password)
         );
+        return user;
     }
 }
