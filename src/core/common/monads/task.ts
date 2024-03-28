@@ -5,6 +5,30 @@ export class Task<T, E = Error> {
         private readonly compute: (resolve: (result: T) => void, reject: (error: E) => void) => void
     ) {}
 
+    static of<T>(value: T): Task<T, never> {
+        return new Task<T, never>((resolve) => resolve(value));
+    }
+
+    static fromPromise<T, E>(promise: Promise<T>): Task<T, E> {
+        return new Task<T, E>((resolve, reject) => promise.then(resolve).catch(reject));
+    }
+
+    static fromEither<L, R>(either: Either<L, R>): Task<R, L> {
+        return new Task<R, L>((resolve, reject) => {
+            either.fold(reject, resolve);
+        });
+    }
+
+    static fromTry<T, E>(fn: () => T): Task<T, E> {
+        return new Task<T, E>((resolve, reject) => {
+            try {
+                resolve(fn());
+            } catch (error) {
+                reject(error as E);
+            }
+        });
+    }
+
     run(resolve: (result: T) => void, reject: (error: E) => void): void {
         this.compute(resolve, reject);
     }
@@ -36,20 +60,6 @@ export class Task<T, E = Error> {
                 },
                 reject
             );
-        });
-    }
-
-    static of<T>(value: T): Task<T, never> {
-        return new Task<T, never>((resolve) => resolve(value));
-    }
-
-    static fromPromise<T, E>(promise: Promise<T>): Task<T, E> {
-        return new Task<T, E>((resolve, reject) => promise.then(resolve).catch(reject));
-    }
-
-    static fromEither<L, R>(either: Either<L, R>): Task<R, L> {
-        return new Task<R, L>((resolve, reject) => {
-            either.fold(reject, resolve);
         });
     }
 }

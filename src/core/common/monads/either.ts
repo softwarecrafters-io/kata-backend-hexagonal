@@ -48,6 +48,6 @@ export class Either<L, R> {
     }
 
     toTask(): Task<R, L> {
-        return Task.fromEither(this);
+        return Task.fromEither<L, R>(this);
     }
 }
