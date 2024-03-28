@@ -1,5 +1,7 @@
 import {ValidationError} from "../common/error";
 
+import {Either} from "../common/monads/either";
+
 export class Email {
     private constructor(private readonly value: string) {}
 
@@ -13,6 +15,10 @@ export class Email {
             throw new ValidationError('Invalid email format');
         }
         return new Email(email);
+    }
+
+    static createSafe(email: string): Either<ValidationError, Email>{
+        return Either.fromTry(() => Email.create(email));
     }
 
     isEqual(otherEmail: Email): boolean {

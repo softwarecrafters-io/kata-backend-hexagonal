@@ -1,4 +1,4 @@
-import {Maybe} from "../../../../core/common/maybe";
+import {Maybe} from "../../../../../core/common/monads/maybe";
 
 describe('The Maybe Monad', () => {
     it('creates a Nothing for a given null input', () => {

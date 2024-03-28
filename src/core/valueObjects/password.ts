@@ -1,6 +1,8 @@
 import {hash} from "../common/hash";
 import {ValidationError} from "../common/error";
 
+import {Either} from "../common/monads/either";
+
 export class Password {
     private readonly value: string;
 
@@ -18,6 +20,10 @@ export class Password {
             throw new ValidationError(errors.join(', '));
         }
         return new Password(this.hashPassword(plainText));
+    }
+
+    static createSafe(plainText: string): Either<ValidationError, Password>{
+        return Either.fromTry(() => Password.createFromPlainText(plainText));
     }
 
     private static hashPassword(plainText: string): string {

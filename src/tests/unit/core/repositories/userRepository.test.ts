@@ -3,7 +3,7 @@ import {Email} from "../../../../core/valueObjects/email";
 import {Id} from "../../../../core/valueObjects/id";
 import {Password} from "../../../../core/valueObjects/password";
 import {InMemoryUserRepository, UserRepository} from "../../../../core/repositories/userRepository";
-import {Maybe} from "../../../../core/common/maybe";
+import {Maybe} from "../../../../core/common/monads/maybe";
 
 describe('The In Memory User Repository', ()=>{
     let repo: InMemoryUserRepository;

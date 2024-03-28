@@ -1,5 +1,6 @@
-export class Maybe<T>{
-    private constructor(private readonly _type: 'Just' | 'Nothing', private readonly value?:T) {}
+export class Maybe<T> {
+    private constructor(private readonly _type: 'Just' | 'Nothing', private readonly value?: T) {
+    }
 
     static just<T>(value: T): Maybe<T> {
         return new Maybe('Just', value);
@@ -32,7 +33,7 @@ export class Maybe<T>{
         return this;
     }
 
-    private isJust<T>(){
+    private isJust<T>() {
         return this._type === "Just";
     }
 }
